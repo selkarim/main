@@ -1,6 +1,8 @@
 package com.exalt.service;
 
 import model.Account;
+import model.Operation;
+import model.Transaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import port.outbound.SaveAccountPort;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -78,8 +81,24 @@ class BankApplicationServiceTest {
         verify(getAccountPortTest, times(2)).get(account.getIdAccount());
     }
 
-    @Test
-    void getTransactionHistory() {
+    @ParameterizedTest
+    @MethodSource(value = "accountArguments")
+    void getTransactionHistory(Account account) {
+
+        when(getAccountPortTest.get(account.getIdAccount())).thenReturn(Optional.of(account));
+        Account account1 = getAccountPortTest.get(account.getIdAccount()).orElseThrow();
+
+        account1 = bankApplicationServiceUnderTest
+                .deposit(account1.getIdAccount(), BigDecimal.valueOf(200)).orElseThrow();
+        account1 = bankApplicationServiceUnderTest
+                .deposit(account1.getIdAccount(), BigDecimal.valueOf(200)).orElseThrow();
+        account1 = bankApplicationServiceUnderTest
+                .withdrawal(account1.getIdAccount(), BigDecimal.valueOf(555)).orElseThrow();
+
+
+        List<Transaction> accountHistory = bankApplicationServiceUnderTest.getTransactionHistory(account1.getIdAccount());
+        Assertions.assertEquals(3, accountHistory.size());
+        Assertions.assertEquals(accountHistory.get(0).operation(), Operation.DEPOSIT);
     }
 
     private static Stream<Arguments> accountArguments() {
