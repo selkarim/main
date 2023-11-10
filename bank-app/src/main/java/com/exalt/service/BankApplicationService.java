@@ -24,12 +24,12 @@ public class BankApplicationService implements IDepositUseCase, IWithdrawalUseCa
 
     @Override
     public Optional<Account> deposit(Long idAccount, BigDecimal amount) {
-        Account account = getAccountPort.get(idAccount).orElseThrow();
-        if(account != null) {
-            account.deposit(amount);
-            saveAccountPort.save(account);
-        }
-        return Optional.ofNullable(account);
+        Optional<Account> account = getAccountPort.get(idAccount);
+        account.ifPresent(account1 ->  {
+            account1.deposit(amount);
+            saveAccountPort.save(account1);
+        });
+        return account;
     }
 
     @Override

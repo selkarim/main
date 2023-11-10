@@ -8,16 +8,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.mockito.junit.jupiter.MockitoExtension;
 import port.outbound.GetAccountPort;
 import port.outbound.SaveAccountPort;
 
-import javax.management.ReflectionException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -62,8 +58,24 @@ class BankApplicationServiceTest {
         verify(getAccountPortTest, times(2)).get(account.getIdAccount());
     }
 
-    @Test
-    void withdrawal() {
+    @ParameterizedTest
+    @MethodSource(value = "accountArguments")
+    void should_withdrawal(Account account) {
+        //given
+        when(getAccountPortTest.get(account.getIdAccount()))
+                .thenReturn(Optional.of(account));
+
+        //when
+
+        Account actuelAccount = getAccountPortTest.get(account.getIdAccount()).orElseThrow();
+
+        Account account1 = bankApplicationServiceUnderTest
+                .withdrawal(actuelAccount.getIdAccount(), BigDecimal.valueOf(555)).orElseThrow();
+
+        //then
+        Assertions.assertEquals(account1.getBalance(), BigDecimal.valueOf(7445));
+
+        verify(getAccountPortTest, times(2)).get(account.getIdAccount());
     }
 
     @Test
