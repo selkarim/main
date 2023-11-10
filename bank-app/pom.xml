@@ -9,12 +9,33 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bank-core-domain</artifactId>
+    <artifactId>bank-app</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <!-- Internal Dependencies -->
+
+        <dependency>
+            <groupId>org.exalt</groupId>
+            <artifactId>bank-core-domain</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!-- External Dependencies -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>

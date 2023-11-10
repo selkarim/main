@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Account {
-    private Long idAccount;
-    private Long idCostumer;
+    private final Long idAccount;
+    private final Long idCostumer;
     private BigDecimal balance;
     private List<Transaction> transactions;
 
@@ -35,7 +35,7 @@ public class Account {
 
     public boolean deposit(BigDecimal amount) {
         if(amount.compareTo(BigDecimal.valueOf(0)) <= 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Value not authorized to deposit");
         }
         balance = balance.add(amount);
         return transactions.add(new Transaction(amount, LocalDateTime.now(),Operation.DEPOSIT));
