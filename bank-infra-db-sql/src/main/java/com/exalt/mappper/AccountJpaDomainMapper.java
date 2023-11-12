@@ -1,4 +1,4 @@
-package com.exalt.mappper;;
+package com.exalt.mappper;
 import com.exalt.entity.AccountEntity;
 import model.Account;
 
