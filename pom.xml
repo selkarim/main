@@ -16,6 +16,7 @@
     <modules>
         <module>bank-core-domain</module>
         <module>bank-app</module>
+        <module>bank-infra-db-sql</module>
     </modules>
 
     <properties>
