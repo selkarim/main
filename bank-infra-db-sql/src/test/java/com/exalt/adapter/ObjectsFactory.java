@@ -1,7 +1,7 @@
-package com.exalt;
+package com.exalt.adapter;
 
-import com.exalt.entity.AccountEntity;
-import com.exalt.entity.TransactionEntity;
+import com.exalt.adapter.entity.AccountEntity;
+import com.exalt.adapter.entity.TransactionEntity;
 import model.Account;
 import model.Operation;
 import model.Transaction;

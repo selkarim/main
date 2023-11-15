@@ -1,7 +1,7 @@
-package com.exalt.mappper;
+package com.exalt.adapter.mappper;
 
-import com.exalt.ObjectsFactory;
-import com.exalt.entity.AccountEntity;
+import com.exalt.adapter.ObjectsFactory;
+import com.exalt.adapter.entity.AccountEntity;
 import model.Account;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

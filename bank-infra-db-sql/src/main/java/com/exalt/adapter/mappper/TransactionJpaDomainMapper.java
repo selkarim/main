@@ -1,13 +1,13 @@
-package com.exalt.mappper;
+package com.exalt.adapter.mappper;
 
-import com.exalt.entity.TransactionEntity;
+import com.exalt.adapter.entity.TransactionEntity;
 import model.Transaction;
 
 import java.util.List;
 
 public class TransactionJpaDomainMapper {
 
-    static TransactionEntity toEntity(Transaction model) {
+    public static TransactionEntity toEntity(Transaction model) {
         return TransactionEntity.builder()
                 .id((long) model.hashCode())
                 .dateCreation(model.date())
@@ -16,7 +16,7 @@ public class TransactionJpaDomainMapper {
                 .build();
     }
 
-    static Transaction toDomain(TransactionEntity entity) {
+    public static Transaction toDomain(TransactionEntity entity) {
         return new Transaction(entity.getAmount(), entity.getDateCreation(), entity.getOperation());
     }
 
