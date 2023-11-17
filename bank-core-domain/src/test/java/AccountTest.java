@@ -28,7 +28,7 @@ class AccountTest {
     @ParameterizedTest
     @ValueSource(doubles = {200, 522, 500})
     void successful_deposit(double amount) {
-        Assertions.assertTrue(account.deposit(BigDecimal.valueOf(amount)));
+        Assertions.assertNotNull(account.deposit(BigDecimal.valueOf(amount)));
 
     }
     @ParameterizedTest
@@ -41,7 +41,7 @@ class AccountTest {
     @ParameterizedTest
     @ValueSource(doubles = {524, 10, 7999})
     void successful_withdrawal(double amount) {
-        Assertions.assertTrue(account.withdrawal(BigDecimal.valueOf(amount)));
+        Assertions.assertNotNull(account.withdrawal(BigDecimal.valueOf(amount)));
     }
 
 

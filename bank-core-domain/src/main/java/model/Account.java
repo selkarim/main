@@ -3,6 +3,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Account {
     private final Long idAccount;
@@ -33,19 +34,23 @@ public class Account {
         return transactions;
     }
 
-    public boolean deposit(BigDecimal amount) {
+    public Optional<Transaction> deposit(BigDecimal amount) {
         if(amount.compareTo(BigDecimal.valueOf(0)) <= 0) {
             throw new IllegalArgumentException("Value not authorized to deposit");
         }
+        Transaction transaction = new Transaction(getIdAccount(),amount, LocalDateTime.now(),Operation.DEPOSIT);
+        transactions.add(transaction);
         balance = balance.add(amount);
-        return transactions.add(new Transaction(amount, LocalDateTime.now(),Operation.DEPOSIT));
+        return Optional.ofNullable(transaction);
     }
-    public boolean withdrawal(BigDecimal amount) {
+    public Optional<Transaction> withdrawal(BigDecimal amount) {
         if(amount.compareTo(BigDecimal.ZERO) < 0 || balance.compareTo(amount) < 0) {
             throw new IllegalArgumentException("Value not authorized to withdraw");
         }
+        Transaction transaction = new Transaction(getIdAccount(),amount, LocalDateTime.now(), Operation.WITHDRAWAL);
+        transactions.add(transaction);
         balance = balance.subtract(amount);
-        return transactions.add(new Transaction(amount, LocalDateTime.now(), Operation.WITHDRAWAL));
+        return Optional.ofNullable(transaction);
 
     }
     public static AccountBuilder builder() {
