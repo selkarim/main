@@ -52,11 +52,11 @@ class BankApplicationServiceTest {
 
         Account actuelAccount = getAccountPortTest.get(account.getIdAccount()).orElseThrow();
 
-        Account account1 = bankApplicationServiceUnderTest
+        Transaction transaction = bankApplicationServiceUnderTest
                 .deposit(actuelAccount.getIdAccount(), BigDecimal.valueOf(555)).orElseThrow();
 
         //then
-        Assertions.assertEquals(account1.getBalance(), BigDecimal.valueOf(8555));
+        Assertions.assertEquals(actuelAccount.getBalance(), BigDecimal.valueOf(8555));
 
         verify(getAccountPortTest, times(2)).get(account.getIdAccount());
     }
@@ -72,33 +72,38 @@ class BankApplicationServiceTest {
 
         Account actuelAccount = getAccountPortTest.get(account.getIdAccount()).orElseThrow();
 
-        Account account1 = bankApplicationServiceUnderTest
+        Transaction transaction = bankApplicationServiceUnderTest
                 .withdrawal(actuelAccount.getIdAccount(), BigDecimal.valueOf(555)).orElseThrow();
 
         //then
-        Assertions.assertEquals(account1.getBalance(), BigDecimal.valueOf(7445));
+        Assertions.assertEquals(account.getBalance(), BigDecimal.valueOf(7445));
 
         verify(getAccountPortTest, times(2)).get(account.getIdAccount());
     }
 
     @ParameterizedTest
     @MethodSource(value = "accountArguments")
-    void getTransactionHistory(Account account) {
+    void should_getTransactionHistory(Account account) {
 
         when(getAccountPortTest.get(account.getIdAccount())).thenReturn(Optional.of(account));
-        Account account1 = getAccountPortTest.get(account.getIdAccount()).orElseThrow();
 
-        account1 = bankApplicationServiceUnderTest
-                .deposit(account1.getIdAccount(), BigDecimal.valueOf(200)).orElseThrow();
-        account1 = bankApplicationServiceUnderTest
-                .deposit(account1.getIdAccount(), BigDecimal.valueOf(200)).orElseThrow();
-        account1 = bankApplicationServiceUnderTest
-                .withdrawal(account1.getIdAccount(), BigDecimal.valueOf(555)).orElseThrow();
+        account = getAccountPortTest.get(account.getIdAccount()).orElseThrow();
+
+        List<Transaction> transactionList = List.of(
+                bankApplicationServiceUnderTest
+                .deposit(account.getIdAccount(), BigDecimal.valueOf(200)).orElseThrow(),
+                bankApplicationServiceUnderTest
+                        .deposit(account.getIdAccount(), BigDecimal.valueOf(300)).orElseThrow(),
+                bankApplicationServiceUnderTest
+                        .withdrawal(account.getIdAccount(), BigDecimal.valueOf(555)).orElseThrow()
+        );
 
 
-        List<Transaction> accountHistory = bankApplicationServiceUnderTest.getTransactionHistory(account1.getIdAccount());
-        Assertions.assertEquals(3, accountHistory.size());
+        List<Transaction> accountHistory = bankApplicationServiceUnderTest.getTransactionHistory(account.getIdAccount());
+        Assertions.assertEquals(transactionList.size(), accountHistory.size());
+        Assertions.assertEquals(transactionList.get(1), accountHistory.get(1));
         Assertions.assertEquals(accountHistory.get(0).operation(), Operation.DEPOSIT);
+        Assertions.assertEquals(accountHistory.get(2).operation(), Operation.WITHDRAWAL);
     }
 
     private static Stream<Arguments> accountArguments() {

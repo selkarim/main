@@ -23,28 +23,32 @@ public class BankApplicationService implements IDepositUseCase, IWithdrawalUseCa
     }
 
     @Override
-    public Optional<Account> deposit(Long idAccount, BigDecimal amount) {
+    public Optional<Transaction> deposit(Long idAccount, BigDecimal amount) {
         Optional<Account> account = getAccountPort.get(idAccount);
-        account.ifPresent(account1 ->  {
-            account1.deposit(amount);
-            saveAccountPort.save(account1);
-        });
-        return account;
+        Optional<Transaction> transaction = Optional.empty();
+        if(account.isPresent()) {
+            transaction = account.get().deposit(amount);
+            saveAccountPort.save(account.get());
+        }
+        return transaction;
     }
 
     @Override
-    public Optional<Account> withdrawal(Long idAccount, BigDecimal amount) {
+    public Optional<Transaction> withdrawal(Long idAccount, BigDecimal amount) {
         Optional<Account> account = getAccountPort.get(idAccount);
-        account.ifPresent(account1 ->  {
-            account1.withdrawal(amount);
-            saveAccountPort.save(account1);
-        });
-
-        return account;
+        Optional<Transaction> transaction = Optional.empty();
+        if (account.isPresent()) {
+            transaction = account.get().withdrawal(amount);
+            saveAccountPort.save(account.get());
+        }
+        return transaction;
     }
     @Override
     public List<Transaction> getTransactionHistory(Long idAccount) {
         Optional<Account> account = getAccountPort.get(idAccount);
         return account.orElseThrow(NoSuchElementException::new).getTransactions();
+    }
+    public Optional<BigDecimal> getBalance(Long idAccount) {
+        return getAccountPort.get(idAccount).map(Account::getBalance);
     }
 }
